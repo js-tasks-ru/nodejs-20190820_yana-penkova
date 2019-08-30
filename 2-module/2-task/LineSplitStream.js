@@ -6,8 +6,12 @@ class LineSplitStream extends stream.Transform {
     super(options);
   }
 
+  getExtremeItem() {
+    return this.last != null ? this.last : '';
+  }
+
   _transform(chunk, encoding, callback) {
-    const lines = ((this.last != null ? this.last : '') + chunk)
+    const lines = (this.getExtremeItem() + chunk)
       .toString()
       .split(os.EOL)
     ;
@@ -20,7 +24,7 @@ class LineSplitStream extends stream.Transform {
   }
 
   _flush(callback) {
-    this.push(this.last != null ? this.last : '');
+    this.push(this.getExtremeItem());
     callback();
   }
 }
